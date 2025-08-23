@@ -48,7 +48,7 @@ export interface API3Oracle extends OracleService {
     getPublisherData(publisher: string): Promise<OracleResponse>;
 }
 
-export interface MetaOracleAggregator {
+export interface NexoOracleAggregator {
     getConsolidatedPrice(token: string): Promise<ConsolidatedPrice>;
 
     aggregateOraclePrices(prices: PriceData[]): ConsolidatedPrice;

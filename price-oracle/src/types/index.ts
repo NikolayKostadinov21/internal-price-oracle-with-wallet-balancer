@@ -5,8 +5,7 @@ export type OracleSource =
     | 'pyth'
     | 'uniswap_v3_twap'
     | 'api3'
-    | 'meta';
-
+    | 'nexo';
 
 // A single source reading (Chainlink, Pyth, Uniswap TWAP, API3)
 export interface PriceData {
@@ -18,9 +17,9 @@ export interface PriceData {
     meta?: Record<string, unknown>;
 }
 
-// The consolidated meta-oracle output we emit/store
+// The consolidated nexo-oracle output we emit/store
 export interface ConsolidatedPrice {
-    source: 'meta';
+    source: 'nexo';
     price: bigint;
     priceDecimals: number;
     at: number;                                                 // epoch in seconds (time we consolidated)
@@ -95,7 +94,7 @@ export const DEFAULTS = {
         pyth: 30,                                               // 30 seconds
         uniswap_v3_twap: 1800,                                  // 30 minutes
         api3: 300                                               // 5 minutes
-    } as Record<Exclude<OracleSource, 'meta'>, number>,
+    } as Record<Exclude<OracleSource, 'nexo'>, number>,
     epsilon: 0.01,                                              // ε -> 1% confidence threshold
     deltaBps: 150                                               // δ -> 150 basis points divergence
 }
@@ -109,14 +108,14 @@ export interface LastGoodStore {
     putLastGood(token: string, price: ConsolidatedPrice): Promise<void>;
 }
 
-export interface MetaOracleResult {
+export interface NexoOracleResult {
     finalPrice: string;                                         // decimal string rendered from (price, priceDecimals)
     priceDecimals: number;
     mode: Mode;
-    source: 'meta';
-    contributingOracles: Exclude<OracleSource, 'meta'>[];
+    source: 'nexo';
+    contributingOracles: Exclude<OracleSource, 'nexo'>[];
     confidence: 'high' | 'medium' | 'low' | 'frozen';
     aggregationMethod: 'median' | 'single' | 'last-known';
-    validationDetails: Partial<Record<Exclude<OracleSource, 'meta'>, OracleValidation>>;
+    validationDetails: Partial<Record<Exclude<OracleSource, 'nexo'>, OracleValidation>>;
     at: number;                                                 // epoch in seconds
 }
