@@ -9,4 +9,5 @@
 .pnp.*
 
 .env.example
+.env
 .editorconfig
