@@ -33,6 +33,7 @@ export class PriceOracleAggregator {
         const tokenConfig = await this.configRepo.getTokenConfig(token);
         const candidates = await this.gatherOraclePrices(token, tokenConfig);
         console.log(`[DEBUG] Total candidates gathered:`, candidates.length);
+        console.log(`[DEBUG] About to validate ${candidates.length} candidates for ${token}`);
         const validated = candidates.filter((price) => this.isValid(price, tokenConfig));
         console.log(`[DEBUG] Validated candidates:`, validated.length);
         if (validated.length === 0) {
@@ -155,18 +156,44 @@ export class PriceOracleAggregator {
         // 3. Uniswap TWAP guards
         let twapOk = true;
         if (priceData.source == 'uniswap_v3_twap') {
-            const minLiquidity = config.minLiquidity ?? 0n;
-            const twapWindow = config.twapWindow ?? 0;
-            const allowedPools = config.allowedPools ?? [];
-            const liq = (priceData.meta as any)?.harmonicMeanLiquidity ?? 0n;
-            const windowSec = (priceData.meta as any)?.windowSec ?? 0;
-            const poolAddress = (priceData.meta as any)?.poolAddress;
+            console.log(`[DEBUG] TWAP VALIDATION START for ${priceData.source}`);
 
-            twapOk =
-                typeof poolAddress === 'string' &&
-                allowedPools.includes(poolAddress) &&
-                windowSec >= twapWindow &&
-                liq >= minLiquidity;
+            const minLiquidity = config.minLiquidity ?? 0n;
+            console.log(`[DEBUG] TWAP: minLiquidity from config:`, minLiquidity, `(type: ${typeof minLiquidity})`);
+
+            const twapWindow = config.twapWindow ?? 0;
+            console.log(`[DEBUG] TWAP: twapWindow from config:`, twapWindow, `(type: ${typeof twapWindow})`);
+
+            const allowedPools = config.allowedPools ?? [];
+            console.log(`[DEBUG] TWAP: allowedPools from config:`, allowedPools, `(type: ${typeof allowedPools})`);
+
+            const liq = (priceData.meta as any)?.harmonicMeanLiquidity ?? 0n;
+            console.log(`[DEBUG] TWAP: liq from meta:`, liq, `(type: ${typeof liq})`);
+
+            const windowSec = (priceData.meta as any)?.windowSec ?? 0;
+            console.log(`[DEBUG] TWAP: windowSec from meta:`, windowSec, `(type: ${typeof windowSec})`);
+
+            const poolAddress = (priceData.meta as any)?.poolAddress;
+            console.log(`[DEBUG] TWAP: poolAddress from meta:`, poolAddress, `(type: ${typeof poolAddress})`);
+
+            console.log(`[DEBUG] TWAP: Starting validation checks...`);
+
+            const check1 = typeof poolAddress === 'string';
+            console.log(`[DEBUG] TWAP: Check 1 - poolAddress is string:`, check1, `(${typeof poolAddress} === 'string')`);
+
+            const check2 = allowedPools.includes(poolAddress);
+            console.log(`[DEBUG] TWAP: Check 2 - poolAddress in allowedPools:`, check2, `(${poolAddress} in [${allowedPools.join(', ')}])`);
+
+            const check3 = windowSec >= twapWindow;
+            console.log(`[DEBUG] TWAP: Check 3 - windowSec >= twapWindow:`, check3, `(${windowSec} >= ${twapWindow})`);
+
+            const check4 = liq >= minLiquidity;
+            console.log(`[DEBUG] TWAP: Check 4 - liq >= minLiquidity:`, check4, `(${liq} >= ${minLiquidity})`);
+
+            twapOk = check1 && check2 && check3 && check4;
+            console.log(`[DEBUG] TWAP: Final twapOk result:`, twapOk, `(${check1} && ${check2} && ${check3} && ${check4})`);
+        } else {
+            console.log(`[DEBUG] TWAP: Skipping TWAP validation for source:`, priceData.source);
         }
 
 
@@ -240,20 +267,34 @@ export class PriceOracleAggregator {
 
         // Uniswap v3 TWAP (first valid pool)
         if (config.allowedPools && config.allowedPools.length > 0 && config.twapWindow) {
+            console.log(`[DEBUG] Attempting Uniswap V3 TWAP for ${token} with pools:`, config.allowedPools);
             for (const poolAddress of config.allowedPools) {
                 try {
+                    console.log(`[DEBUG] Trying Uniswap V3 pool: ${poolAddress} for ${token}`);
                     const tw = await this.uniswapV3Oracle.getPrice(token, {
                         poolAddress,
                         windowSec: config.twapWindow
                     });
+                    console.log(`[DEBUG] Uniswap V3 response for ${token} (pool ${poolAddress}):`, tw);
                     if (tw?.success && tw.data) {
+                        console.log(`[DEBUG] Adding Uniswap V3 data to candidates for ${token}:`, tw.data);
                         out.push(tw.data as PriceData);
+                        console.log(`[DEBUG] Candidates array length after adding Uniswap V3:`, out.length);
                         break;
+                    } else {
+                        console.log(`[DEBUG] Uniswap V3 response invalid for ${token} (pool ${poolAddress}):`, { success: tw?.success, hasData: !!tw?.data });
                     }
                 } catch (e) {
-                    // console.warn(`Uniswap v3 TWAP fetch failed for ${token} (pool ${poolAddress}):`, e);
+                    console.log(`[DEBUG] Uniswap V3 error for ${token} (pool ${poolAddress}):`, e);
                 }
             }
+        } else {
+            console.log(`[DEBUG] Skipping Uniswap V3 for ${token}:`, {
+                hasAllowedPools: !!config.allowedPools,
+                allowedPoolsLength: config.allowedPools?.length,
+                hasTwapWindow: !!config.twapWindow,
+                twapWindow: config.twapWindow
+            });
         }
 
         // API3
@@ -264,6 +305,7 @@ export class PriceOracleAggregator {
             // console.warn(`API3 fetch failed for ${token}:`, e);
         }
 
+        console.log(`[DEBUG] Final candidates array for ${token}:`, out.map(c => ({ source: c.source, price: c.price.toString() })));
         return out;
     }
 
