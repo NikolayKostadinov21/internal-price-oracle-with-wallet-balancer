@@ -48,13 +48,12 @@ export interface API3Oracle extends OracleService {
     getPublisherData(publisher: string): Promise<OracleResponse>;
 }
 
-export interface NexoOracleAggregator {
-    getConsolidatedPrice(token: string): Promise<ConsolidatedPrice>;
+// export interface NexoOracleAggregator {
+//     getConsolidatedPrice(token: string): Promise<ConsolidatedPrice>;
 
-    aggregateOraclePrices(prices: PriceData[]): ConsolidatedPrice;
-    validateOracleData(price: PriceData, token: string): OracleValidation;
-    calculateMedian(prices: PriceData[]): { price: bigint; priceDecimals: number };
-    selectBestPrice(prices: PriceData[]): PriceData;
-    getLastKnownPrice(token: string): ConsolidatedPrice | null;
-    markPriceFrozen(token: string): void;
-}
+//     aggregateOraclePrices(prices: PriceData[]): ConsolidatedPrice;
+//     validateOracleData(price: PriceData, token: string): OracleValidation;
+//     selectBestPrice(prices: PriceData[]): PriceData;
+//     getLastKnownPrice(token: string): ConsolidatedPrice | null;
+//     markPriceFrozen(token: string): void;
+// }
