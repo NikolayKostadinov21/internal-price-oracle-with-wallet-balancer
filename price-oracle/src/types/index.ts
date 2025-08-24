@@ -76,7 +76,7 @@ export interface TokenConfig {
     allowedPools?: string[];                                    // whitelisted Uniswap v3 pools
 
     // Freshness / acceptance thresholds (overrides per-source defaults)
-    ttlBySource: Partial<Record<OracleSource, number>>;         // seconds
+    ttlBySource: Record<OracleSource, number>;         // seconds
     epsilon?: number;                                           // Pyth confidence / price threshold (e.g. 0.01)
     deltaBps?: number;                                          // Divergence alert threshold (e.g. 150)
 }
