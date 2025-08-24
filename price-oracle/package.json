@@ -21,8 +21,7 @@
     "helmet": "^8.1.0",
     "mysql2": "^3.14.3",
     "redis": "^5.8.2",
-    "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
