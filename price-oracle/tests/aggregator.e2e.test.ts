@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { PriceOracleAggregator } from '../src/services/oracle/aggregator';
 import { DEFAULTS, LiquidityTier, TokenConfig } from '../src/types';
 import {
-    MockApi3Adapter,
     MockChainlinkAdapter,
     MockPythAdapter,
     MockUniswapV3TwapAdapter,
@@ -12,7 +11,7 @@ import { toScaledBigInt } from './helpers/scaling';
 
 const T0 = Math.floor(Date.now() / 1000);
 
-function mk(source: 'chainlink' | 'pyth' | 'uniswap_v3_twap' | 'api3', dec: string, d: number, at: number, meta?: Record<string, unknown>) {
+function mk(source: 'chainlink' | 'pyth' | 'uniswap_v3_twap', dec: string, d: number, at: number, meta?: Record<string, unknown>) {
     return { source, price: toScaledBigInt(dec, d), priceDecimals: d, at, meta };
 }
 
@@ -21,7 +20,7 @@ describe('PriceOracleAggregator - end-to-end sequence', () => {
     let chainlink: MockChainlinkAdapter;
     let pyth: MockPythAdapter;
     let univ3: MockUniswapV3TwapAdapter;
-    let api3: MockApi3Adapter;
+
     let cfgRepo: InMemoryConfigRepo;
     let store: InMemoryLastGoodStore;
     let agg: PriceOracleAggregator;
@@ -30,7 +29,7 @@ describe('PriceOracleAggregator - end-to-end sequence', () => {
         chainlink = new MockChainlinkAdapter();
         pyth = new MockPythAdapter();
         univ3 = new MockUniswapV3TwapAdapter();
-        api3 = new MockApi3Adapter();
+
         cfgRepo = new InMemoryConfigRepo();
         store = new InMemoryLastGoodStore();
 
@@ -48,14 +47,13 @@ describe('PriceOracleAggregator - end-to-end sequence', () => {
                 chainlink: DEFAULTS.ttl.chainlink,
                 pyth: DEFAULTS.ttl.pyth,
                 uniswap_v3_twap: DEFAULTS.ttl.uniswap_v3_twap,
-                api3: DEFAULTS.ttl.api3,
             },
             epsilon: 0.015,
             deltaBps: 200,
         };
 
         cfgRepo.setTokenConfig(token, cfg);
-        agg = new PriceOracleAggregator(chainlink, pyth, univ3, api3, cfgRepo as any, store as any);
+        agg = new PriceOracleAggregator(chainlink, pyth, univ3, cfgRepo as any, store as any);
     });
 
     it('sequence: normal → normal (CL stale) → degraded → frozen', async () => {

@@ -3,9 +3,7 @@ export type Mode = 'normal' | 'degraded' | 'frozen';
 export type OracleSource =
     | 'chainlink'
     | 'pyth'
-    | 'uniswap_v3_twap'
-    | 'api3'
-    | 'nexo';
+    | 'uniswap_v3_twap';
 
 // A single source reading (Chainlink, Pyth, Uniswap TWAP, API3)
 export interface PriceData {
@@ -94,8 +92,7 @@ export const DEFAULTS = {
         chainlink: 300,                                         // 5 minutes
         pyth: 30,                                               // 30 seconds
         uniswap_v3_twap: 1800,                                  // 30 minutes
-        api3: 300                                               // 5 minutes
-    } as Record<Exclude<OracleSource, 'nexo'>, number>,
+    } as Record<OracleSource, number>,
     epsilon: 0.01,                                              // ε -> 1% confidence threshold
     deltaBps: 150                                               // δ -> 150 basis points divergence
 }
@@ -114,9 +111,9 @@ export interface NexoOracleResult {
     priceDecimals: number;
     mode: Mode;
     source: 'nexo';
-    contributingOracles: Exclude<OracleSource, 'nexo'>[];
+    contributingOracles: OracleSource[];
     confidence: 'high' | 'medium' | 'low' | 'frozen';
     aggregationMethod: 'median' | 'single' | 'last-known';
-    validationDetails: Partial<Record<Exclude<OracleSource, 'nexo'>, OracleValidation>>;
+    validationDetails: Partial<Record<OracleSource, OracleValidation>>;
     at: number;                                                 // epoch in seconds
 }

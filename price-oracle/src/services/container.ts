@@ -20,11 +20,22 @@ import { PythAdapter } from './oracle/adapters/PythAdapter';
 // Real Uniswap V3 adapter
 import { UniswapV3Adapter } from './oracle/adapters/UniswapV3Adapter';
 
-// Mock adapters for development/testing (keeping others as mocks for now)
-import { MockApi3Adapter } from '../../tests/mocks/MockAdapters';
+// Note: API3 is excluded per assignment requirements
 
 export async function createContainer(): Promise<AwilixContainer> {
     const container = createAwilixContainer();
+
+    // Validate required environment variables
+    const requiredEnvVars = [
+        'MYSQL_DATABASE',
+        'MYSQL_USER',
+        'MYSQL_PASSWORD'
+    ];
+
+    const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+    if (missingEnvVars.length > 0) {
+        throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+    }
 
     try {
         // Initialize database
@@ -39,11 +50,15 @@ export async function createContainer(): Promise<AwilixContainer> {
         await sequelize.sync({ force: false });
         console.log('Database models synchronized');
 
-        // Create real Chainlink and Pyth adapters, mock adapters for others
+        // Create real oracle adapters (API3 excluded per assignment requirements)
         const chainlinkOracle = new ChainlinkAdapter();
         const pythOracle = new PythAdapter();
         const uniswapV3Oracle = new UniswapV3Adapter(process.env.ETHEREUM_RPC_URL || 'https://eth-mainnet.g.alchemy.com/v2/demo');
-        const api3Oracle = new MockApi3Adapter();
+
+        // Create dummy API3 adapter (excluded per assignment requirements)
+        const api3Oracle = {
+            getPrice: async () => ({ success: false, error: 'API3 not implemented per assignment requirements' })
+        };
 
         // Create database-backed configuration and storage
         const dbConfigRepo = new DatabaseConfigRepo(sequelize);
@@ -79,7 +94,6 @@ export async function createContainer(): Promise<AwilixContainer> {
             chainlinkOracle,
             pythOracle,
             uniswapV3Oracle,
-            api3Oracle,
             configRepo,
             lastGoodStore
         );
@@ -112,7 +126,7 @@ export async function createContainer(): Promise<AwilixContainer> {
         return container;
 
     } catch (error) {
-        console.error('❌ Failed to initialize container:', error);
+        console.error('Failed to initialize container:', error);
         throw error;
     }
 }

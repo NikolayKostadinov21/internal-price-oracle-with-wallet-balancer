@@ -8,7 +8,6 @@ export class PriceOracleAggregator {
         private chainlinkOracle: { getPrice: (token: string, params?: any) => Promise<any> },
         private pythOracle: { getPrice: (token: string, params?: any) => Promise<any> },
         private uniswapV3Oracle: { getPrice: (token: string, params?: any) => Promise<any> },
-        private api3Oracle: { getPrice: (token: string, params?: any) => Promise<any> },
         private configRepo: OracleConfig,
         private lastGoodStore: LastGoodStore
     ) { }
@@ -115,11 +114,11 @@ export class PriceOracleAggregator {
      * Returns true only if all applicable checks pass.
      */
     private isValid(priceData: PriceData, config: TokenConfig): boolean {
-        if (priceData.source === 'nexo') return false; // consolidated is never a candidate
+        // Note: 'nexo' is not a valid OracleSource, so this check is not needed
 
         // 1. Freshness check
         const ttlOverride = config.ttlBySource?.[priceData.source];
-        const ttl = ttlOverride ?? DEFAULTS.ttl[priceData.source as Exclude<OracleSource, 'nexo'>]; // TTL_KEY_BY_SOURCE ?
+        const ttl = ttlOverride ?? DEFAULTS.ttl[priceData.source]; // TTL_KEY_BY_SOURCE ?
         const now = Math.floor(Date.now() / 1000);
         const timeDiff = now - priceData.at;
         const isStale = timeDiff > ttl;
@@ -297,13 +296,7 @@ export class PriceOracleAggregator {
             });
         }
 
-        // API3
-        try {
-            const api3 = await this.api3Oracle.getPrice(token);
-            if (api3?.success && api3.data) out.push(api3.data as PriceData);
-        } catch (e) {
-            // console.warn(`API3 fetch failed for ${token}:`, e);
-        }
+        // API3 excluded per assignment requirements
 
         console.log(`[DEBUG] Final candidates array for ${token}:`, out.map(c => ({ source: c.source, price: c.price.toString() })));
         return out;

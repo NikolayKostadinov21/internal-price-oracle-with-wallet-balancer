@@ -60,7 +60,7 @@ describe('PriceOracleAggregator - integration', () => {
                 chainlink: DEFAULTS.ttl.chainlink,
                 pyth: DEFAULTS.ttl.pyth,
                 uniswap_v3_twap: DEFAULTS.ttl.uniswap_v3_twap,
-                api3: DEFAULTS.ttl.api3,
+
             },
             epsilon: 0.01,
             deltaBps: 150,
@@ -72,7 +72,6 @@ describe('PriceOracleAggregator - integration', () => {
             chainlink,
             pyth,
             univ3,
-            api3,
             cfgRepo as any,
             store as any
         );

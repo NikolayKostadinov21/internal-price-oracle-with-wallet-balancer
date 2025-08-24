@@ -3,7 +3,7 @@ import { initTokenConfigModel } from '../models/TokenConfig';
 import { initLastGoodStoreModel } from '../models/LastGoodStore';
 
 export interface DatabaseConfig {
-  dialect: 'sqlite' | 'postgres';
+  dialect: 'sqlite' | 'postgres' | 'mysql';
   host?: string;
   port?: number;
   username?: string;
@@ -38,24 +38,27 @@ export const createDatabase = (config: DatabaseConfig) => {
 
 export const getDefaultDatabaseConfig = (): DatabaseConfig => {
   const env = process.env.NODE_ENV || 'development';
-  
+
   if (env === 'production') {
     return {
-      dialect: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      username: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-      database: process.env.DB_NAME || 'price_oracle',
+      dialect: 'mysql',
+      host: process.env.MYSQL_HOST || 'localhost',
+      port: parseInt(process.env.MYSQL_PORT || '3306'),
+      username: process.env.MYSQL_USER || 'oracle_user',
+      password: process.env.MYSQL_PASSWORD || '1234',
+      database: process.env.MYSQL_DATABASE || 'price_oracle',
       logging: process.env.DB_LOGGING === 'true',
     };
   }
 
-  // Development: SQLite
+  // Development: MySQL (for Docker setup)
   return {
-    dialect: 'sqlite',
-    database: 'price_oracle_dev',
-    storage: './data/price_oracle_dev.sqlite',
+    dialect: 'mysql',
+    host: process.env.MYSQL_HOST || 'localhost',
+    port: parseInt(process.env.MYSQL_PORT || '3306'),
+    username: process.env.MYSQL_USER || 'oracle_user',
+    password: process.env.MYSQL_PASSWORD || '1234',
+    database: process.env.MYSQL_DATABASE || 'price_oracle',
     logging: process.env.DB_LOGGING === 'true',
   };
 };

@@ -41,12 +41,7 @@ export interface UniswapV3Oracle extends OracleService {
     getPrice(token: string, options?: { poolAddress: string; windowSec: number }): Promise<OracleResponse>;
 }
 
-export interface API3Oracle extends OracleService {
-    readonly source: 'api3';
-
-    getDirectPrice(dapiAddress: string): Promise<OracleResponse>;
-    getPublisherData(publisher: string): Promise<OracleResponse>;
-}
+// API3Oracle interface removed - API3 excluded per assignment requirements
 
 // export interface NexoOracleAggregator {
 //     getConsolidatedPrice(token: string): Promise<ConsolidatedPrice>;

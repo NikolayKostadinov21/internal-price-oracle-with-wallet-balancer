@@ -49,7 +49,7 @@ export class MockPythAdapter extends BaseMockAdapter {
 }
 
 export class MockApi3Adapter extends BaseMockAdapter {
-    readonly source: OracleSource = 'api3';
+    readonly source: OracleSource = 'chainlink'; // Changed from 'api3' since API3 is excluded
 }
 
 export class MockUniswapV3TwapAdapter extends BaseMockAdapter {
