@@ -8,6 +8,10 @@
 #!.yarn/cache
 .pnp.*
 
-.env.example
+# .env.example
 .env
 .editorconfig
+
+dist/
+node_modules/
+.vscode

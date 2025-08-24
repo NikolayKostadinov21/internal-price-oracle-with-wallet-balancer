@@ -117,7 +117,7 @@ export class PriceOracleAggregator {
 
         // 1. Freshness check
         const ttlOverride = config.ttlBySource?.[priceData.source];
-        const ttl = ttlOverride ?? DEFAULTS.ttl[priceData.source as Exclude<OracleSource, 'nexo'>];
+        const ttl = ttlOverride ?? DEFAULTS.ttl[priceData.source as Exclude<OracleSource, 'nexo'>]; // TTL_KEY_BY_SOURCE ?
         const isStale = (Math.floor(Date.now() / 1000) - priceData.at) > ttl;
 
         // 2. Pyth confidence check
