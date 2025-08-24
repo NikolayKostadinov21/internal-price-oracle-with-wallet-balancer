@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  wallet-balancer:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=wallet_balancer
+      - ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/demo
+      - ETHEREUM_CHAIN_ID=1
+    volumes:
+      - ./data:/app/data
+      - ./env.example:/app/.env
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    command: ["yarn", "start"]
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=wallet_balancer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
