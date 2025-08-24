@@ -32,8 +32,9 @@ export class PriceOracleAggregator {
     async getConsolidatedPrice(token: string): Promise<ConsolidatedPrice> {
         const tokenConfig = await this.configRepo.getTokenConfig(token);
         const candidates = await this.gatherOraclePrices(token, tokenConfig);
-
+        console.log(`[DEBUG] Total candidates gathered:`, candidates.length);
         const validated = candidates.filter((price) => this.isValid(price, tokenConfig));
+        console.log(`[DEBUG] Validated candidates:`, validated.length);
         if (validated.length === 0) {
             const last = await this.lastGoodStore.getLastGood(token);
             if (!last) throw new Error(`No valid price and no last-good for ${token}`);
@@ -118,7 +119,22 @@ export class PriceOracleAggregator {
         // 1. Freshness check
         const ttlOverride = config.ttlBySource?.[priceData.source];
         const ttl = ttlOverride ?? DEFAULTS.ttl[priceData.source as Exclude<OracleSource, 'nexo'>]; // TTL_KEY_BY_SOURCE ?
-        const isStale = (Math.floor(Date.now() / 1000) - priceData.at) > ttl;
+        const now = Math.floor(Date.now() / 1000);
+        const timeDiff = now - priceData.at;
+        const isStale = timeDiff > ttl;
+
+        console.log(`[DEBUG] Validation for ${priceData.source}:`, {
+            token: config.symbol,
+            price: priceData.price.toString(),
+            at: priceData.at,
+            atDate: new Date(priceData.at * 1000).toISOString(),
+            now,
+            nowDate: new Date(now * 1000).toISOString(),
+            timeDiff,
+            ttl,
+            isStale,
+            priceData
+        });
 
         // 2. Pyth confidence check
         let confidenceOk = true;
@@ -154,7 +170,9 @@ export class PriceOracleAggregator {
         }
 
 
-        return !isStale && confidenceOk && twapOk;
+        const isValid = !isStale && confidenceOk && twapOk;
+        console.log(`[DEBUG] Final validation result for ${priceData.source}:`, { isValid, isStale, confidenceOk, twapOk });
+        return isValid;
     }
 
     /**
@@ -206,9 +224,10 @@ export class PriceOracleAggregator {
         // Chainlink
         try {
             const chainlink = await this.chainlinkOracle.getPrice(token);
+            console.log(`[DEBUG] Chainlink response for ${token}:`, chainlink);
             if (chainlink?.success && chainlink.data) out.push(chainlink.data as PriceData);
         } catch (e) {
-            //console.warn(`Chainlink fetch failed for ${token}:`, e);
+            console.warn(`Chainlink fetch failed for ${token}:`, e);
         }
 
         // Pyth

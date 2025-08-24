@@ -34,6 +34,7 @@ export interface ConsolidatedPrice {
         priceDecimals: number;
         at: number;
     }>;
+
 }
 
 // Generic adapter response shape

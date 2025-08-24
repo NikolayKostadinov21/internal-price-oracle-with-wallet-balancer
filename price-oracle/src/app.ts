@@ -4,6 +4,21 @@ import helmet from 'helmet';
 import { AwilixContainer } from 'awilix';
 import { PriceOracleAggregator } from './services/oracle/aggregator';
 
+// Helper function to convert BigInt values to strings for JSON serialization
+function serializeBigInts(obj: any): any {
+    if (obj === null || obj === undefined) return obj;
+    if (typeof obj === 'bigint') return obj.toString();
+    if (Array.isArray(obj)) return obj.map(serializeBigInts);
+    if (typeof obj === 'object') {
+        const result: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            result[key] = serializeBigInts(value);
+        }
+        return result;
+    }
+    return obj;
+}
+
 export function createApp(container: AwilixContainer) {
     const app = express();
 
@@ -44,7 +59,7 @@ export function createApp(container: AwilixContainer) {
 
             res.json({
                 success: true,
-                data: price
+                data: serializeBigInts(price)
             });
         } catch (error) {
             console.error(`Error fetching price for ${req.params.token}:`, error);
