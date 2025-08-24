@@ -8,7 +8,7 @@ config();
 async function main() {
     try {
         // Create dependency injection container
-        const container = createContainer();
+        const container = await createContainer();
 
         // Create Express app
         const app = createApp(container);
