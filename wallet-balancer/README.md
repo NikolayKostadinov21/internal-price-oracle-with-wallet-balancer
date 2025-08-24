@@ -2,7 +2,7 @@
 
 A standalone, production-ready wallet balancing service that automatically transfers assets between hot and cold wallets based on price triggers.
 
-## 🚀 Features
+## Features
 
 - **Price-Based Triggers**: Automatically execute transfers when asset prices cross configured thresholds
 - **Hysteresis Support**: Prevents rapid-fire triggers with configurable hysteresis
@@ -13,7 +13,7 @@ A standalone, production-ready wallet balancing service that automatically trans
 - **Database Persistence**: SQLite (dev) / PostgreSQL (prod) with Sequelize ORM
 - **Event-Driven Architecture**: Built-in event system for monitoring and integration
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 wallet-balancer/
@@ -28,13 +28,13 @@ wallet-balancer/
 └── index.ts         # Main entry point
 ```
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 18+
 - npm or yarn
 - SQLite (development) or PostgreSQL (production)
 
-## 🛠️ Installation
+## Installation
 
 ```bash
 # Clone the repository
@@ -52,7 +52,7 @@ cp env.example .env
 yarn build
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 Create a `.env` file with the following variables:
 
@@ -78,7 +78,7 @@ PORT=3001
 NODE_ENV=development
 ```
 
-## 🚀 Usage
+## Usage
 
 ### Basic Usage
 
@@ -131,7 +131,7 @@ const trigger = await triggerRepo.createTrigger({
 });
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -147,7 +147,7 @@ yarn test:ui
 yarn test:coverage
 ```
 
-## 📊 Database Schema
+## Database Schema
 
 ### Triggers Table
 
@@ -180,7 +180,7 @@ yarn test:coverage
 - `safe_tx_hash`: Safe transaction hash (for multisig)
 - `tx_hash`: Ethereum transaction hash
 
-## 🔧 Development
+## Development
 
 ```bash
 # Start development server
@@ -217,7 +217,7 @@ service.on("transferError", ({ signal, error }) => {
 - **Audit Trail**: Complete transfer history
 - **Environment-based Configuration**: Secure credential management
 
-## 🚀 Deployment
+## Deployment
 
 ### Docker (Recommended)
 
@@ -258,7 +258,7 @@ yarn start
 5. Ensure all tests pass
 6. Submit a pull request
 
-## 📝 License
+## License
 
 Internal use only - not for external distribution.
 

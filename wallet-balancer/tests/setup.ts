@@ -10,7 +10,7 @@ beforeAll(async () => {
     try {
         // For unit tests, we don't need a real database
         // The models will be mocked
-        console.log('🧪 Test setup initialized (unit tests)');
+        console.log('Test setup initialized (unit tests)');
     } catch (error) {
         console.error('Test setup failed:', error);
         throw error;
@@ -21,7 +21,7 @@ afterAll(async () => {
     if (testDatabase) {
         try {
             await testDatabase.close();
-            console.log('🧪 Test database closed');
+            console.log('Test database closed');
         } catch (error) {
             console.error('Failed to close test database:', error);
         }

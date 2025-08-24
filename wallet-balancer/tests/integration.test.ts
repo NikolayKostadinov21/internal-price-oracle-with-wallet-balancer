@@ -32,7 +32,7 @@ describe('Wallet Balancer Integration Tests', () => {
             triggerRepo = new TriggerRepository(sequelize);
             transferIntentRepo = new TransferIntentRepository(sequelize);
 
-            console.log('🧪 Integration test database initialized');
+            console.log('Integration test database initialized');
         } catch (error) {
             console.error('Integration test setup failed:', error);
             throw error;
@@ -43,7 +43,7 @@ describe('Wallet Balancer Integration Tests', () => {
         if (sequelize) {
             try {
                 await sequelize.close();
-                console.log('🧪 Integration test database closed');
+                console.log('Integration test database closed');
             } catch (error) {
                 console.error('Failed to close integration test database:', error);
             }
