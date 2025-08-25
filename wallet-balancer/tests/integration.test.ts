@@ -12,6 +12,16 @@ import { TransferIntentModel } from '../models/TransferIntent';
 // Set test environment
 process.env.NODE_ENV = 'test';
 
+// Set test configuration for integration tests
+process.env.HOT_WALLET_PRIVATE_KEY = '0x1234567890123456789012345678901234567890123456789012345678901234';
+process.env.ETHEREUM_RPC_URL = 'https://eth-mainnet.g.alchemy.com/v2/demo';
+process.env.ETHEREUM_CHAIN_ID = '1';
+process.env.DB_HOST = 'localhost';
+process.env.DB_PORT = '3308';
+process.env.DB_USERNAME = 'balancer_user';
+process.env.DB_PASSWORD = '1234';
+process.env.DB_NAME = 'wallet_balancer';
+
 describe('Wallet Balancer Integration Tests', () => {
     let walletBalancer: WalletBalancer;
     let sequelize: any;
@@ -161,7 +171,7 @@ describe('Wallet Balancer Integration Tests', () => {
             // Verify the update
             const updatedTrigger = await triggerRepo.getTriggerById(triggerId);
             expect(updatedTrigger?.enabled).toBe(false);
-            expect(updatedTrigger?.threshold).toBe(2500);
+            expect(Number(updatedTrigger?.threshold)).toBe(2500);
 
             await walletBalancer.stop();
         });

@@ -87,6 +87,7 @@ export const initTransferIntentModel = (sequelize: any) => {
             sequelize,
             tableName: 'transfer_intents',
             timestamps: true,
+            underscored: true, // Use snake_case for database columns
             indexes: [
                 {
                     unique: true,

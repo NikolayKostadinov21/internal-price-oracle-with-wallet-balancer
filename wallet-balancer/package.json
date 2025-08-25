@@ -2,12 +2,12 @@
   "name": "wallet-balancer",
   "version": "1.0.0",
   "description": "Standalone wallet balancing service for automatic hot/cold wallet transfers based on price triggers",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "packageManager": "yarn@1.22.22",
   "scripts": {
-    "dev": "nodemon --exec tsx index.ts",
+    "dev": "nodemon --exec tsx main.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/main.js",
     "test": "vitest run --environment node --globals",
     "test:watch": "vitest --environment node --globals",
     "test:ui": "vitest --ui --environment node --globals",
@@ -29,8 +29,10 @@
   "author": "Internal Development Team",
   "license": "UNLICENSED",
   "dependencies": {
+    "axios": "^1.11.0",
     "dotenv": "^17.2.1",
     "ethers": "^6.15.0",
+    "mysql2": "^3.9.2",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
     "zod": "^4.1.1"
@@ -38,7 +40,7 @@
   "devDependencies": {
     "@types/node": "^24.3.0",
     "@types/sequelize": "^6.12.0",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/coverage-v8": "^1.0.4",
     "@vitest/ui": "^1.0.4",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",

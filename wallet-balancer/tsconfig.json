@@ -15,7 +15,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "types": ["node", "vitest/globals"],
+    "types": ["node"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -23,14 +23,8 @@
     "noEmitOnError": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "**/*.ts",
-    "!node_modules/**/*",
-    "!dist/**/*",
-    "!**/*.test.ts",
-    "!**/*.spec.ts"
-  ],
-  "exclude": ["node_modules", "dist", "data", "__tests__"],
+  "include": ["**/*", "!node_modules/**/*", "!dist/**/*"],
+  "exclude": ["node_modules", "dist", "data"],
   "ts-node": {
     "files": true,
     "esm": false

@@ -1,47 +1,51 @@
 version: "3.8"
 
 services:
+  # Simple MySQL database
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: wallet_balancer
+      MYSQL_USER: balancer_user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Simple Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6381:6379"
+
+  # Simple Adminer
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mysql
+
+  # Wallet Balancer Service
   wallet-balancer:
     build: .
     ports:
       - "3001:3001"
     environment:
-      - NODE_ENV=development
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=password
-      - DB_NAME=wallet_balancer
-      - ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/demo
-      - ETHEREUM_CHAIN_ID=1
-    volumes:
-      - ./data:/app/data
-      - ./env.example:/app/.env
+      NODE_ENV: development
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: balancer_user
+      DB_PASSWORD: 1234
+      DB_NAME: wallet_balancer
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PRICE_ORACLE_URL: http://host.docker.internal:3000
     depends_on:
-      - postgres
-    restart: unless-stopped
-    command: ["yarn", "start"]
-
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=wallet_balancer
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
+      - mysql
+      - redis
 
 volumes:
-  postgres_data:
-  redis_data:
+  mysql_data:

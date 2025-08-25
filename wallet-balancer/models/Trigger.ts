@@ -105,6 +105,7 @@ export const initTriggerModel = (sequelize: any) => {
             sequelize,
             tableName: 'triggers',
             timestamps: true,
+            underscored: true, // Use snake_case for database columns
             indexes: [
                 {
                     fields: ['asset_address', 'chain_id'],
