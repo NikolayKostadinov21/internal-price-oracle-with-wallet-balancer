@@ -22,10 +22,7 @@ export interface TriggerAttributes {
 
 export interface TriggerCreationAttributes extends Optional<TriggerAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
 
-export class TriggerModel extends Model<TriggerAttributes, TriggerCreationAttributes> {
-    // Remove public class fields to avoid shadowing Sequelize getters
-    // These will be provided by Sequelize automatically
-}
+export class TriggerModel extends Model<TriggerAttributes, TriggerCreationAttributes> { }
 
 export const initTriggerModel = (sequelize: any) => {
     TriggerModel.init(
@@ -105,7 +102,7 @@ export const initTriggerModel = (sequelize: any) => {
             sequelize,
             tableName: 'triggers',
             timestamps: true,
-            underscored: true, // Use snake_case for database columns
+            underscored: true,
             indexes: [
                 {
                     fields: ['asset_address', 'chain_id'],

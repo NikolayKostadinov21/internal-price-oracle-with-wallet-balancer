@@ -6,12 +6,12 @@ console.log("🧪 Testing E2E Functionality...");
 async function testE2E() {
   try {
     // Test 1: Import mainnet config
-    console.log("📦 Testing mainnet config import...");
+    console.log("Testing mainnet config import...");
     const { MAINNET_CONFIG } = await import("./tests/e2e/mainnet.config.js");
     console.log("  Mainnet config imported");
 
     // Test 2: Validate config
-    console.log("🔍 Validating mainnet configuration...");
+    console.log("Validating mainnet configuration...");
     expect(MAINNET_CONFIG.CHAIN_ID).toBe(1);
     expect(MAINNET_CONFIG.ETH.SYMBOL).toBe("ETH");
     expect(MAINNET_CONFIG.ETH.ASSET_ADDRESS).toBe(
@@ -20,17 +20,17 @@ async function testE2E() {
     console.log("  Mainnet configuration validated");
 
     // Test 3: Import WalletBalancer
-    console.log("📦 Testing WalletBalancer import...");
+    console.log("Testing WalletBalancer import...");
     const { WalletBalancer } = await import("./dist/index.js");
     console.log("  WalletBalancer imported");
 
     // Test 4: Create instance
-    console.log("🔧 Creating WalletBalancer instance...");
+    console.log("Creating WalletBalancer instance...");
     const walletBalancer = new WalletBalancer();
     console.log("  WalletBalancer instance created");
 
     // Test 5: Validate service
-    console.log("🔍 Validating service...");
+    console.log("Validating service...");
     const service = walletBalancer.getService();
     expect(service).toBeDefined();
     console.log("  Service validated");

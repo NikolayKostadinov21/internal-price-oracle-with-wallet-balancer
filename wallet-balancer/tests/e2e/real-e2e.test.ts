@@ -192,8 +192,8 @@ describe('Real E2E: Mainnet ETH Price Monitoring & Transfer Execution - PHASE 2'
             const priceResponse = await axios.get('http://localhost:3000/price/ETH');
             const currentPrice = parseFloat(priceResponse.data.data.price) / Math.pow(10, priceResponse.data.data.priceDecimals);
 
-            console.log(`  Current ETH price: $${currentPrice.toFixed(2)}`);
-            console.log('🔍 Monitoring ETH price for threshold crossings...');
+            console.log(`Current ETH price: $${currentPrice.toFixed(2)}`);
+            console.log('Monitoring ETH price for threshold crossings...');
             console.log('  Triggers will fire when:');
             console.log(`   • ETH < $${MAINNET_CONFIG.ETH.THRESHOLDS.HOT_TO_COLD} → Move to cold wallet`);
             console.log(`   • ETH > $${MAINNET_CONFIG.ETH.THRESHOLDS.COLD_TO_HOT} → Move to hot wallet`);
@@ -233,7 +233,7 @@ describe('Real E2E: Mainnet ETH Price Monitoring & Transfer Execution - PHASE 2'
             const priceResponse = await axios.get('http://localhost:3000/price/ETH');
             const currentPrice = parseFloat(priceResponse.data.data.price) / Math.pow(10, priceResponse.data.data.priceDecimals);
 
-            console.log(`📉 Current ETH price: $${currentPrice.toFixed(2)}`);
+            console.log(`Current ETH price: $${currentPrice.toFixed(2)}`);
 
             // Simulate a trigger firing (e.g., ETH drops to trigger hot-to-cold)
             const triggerDirection = 'hot_to_cold';
@@ -256,12 +256,12 @@ describe('Real E2E: Mainnet ETH Price Monitoring & Transfer Execution - PHASE 2'
             expect(transferIntent.fromAddress).toBe(MAINNET_CONFIG.WALLETS.HOT);
             expect(transferIntent.toAddress).toBe(MAINNET_CONFIG.WALLETS.COLD);
 
-            console.log('  Real transfer intent created successfully in database');
-            console.log(`📋 Intent ID: ${transferIntent.id}`);
-            console.log(`🔄 Status: ${transferIntent.status}`);
-            console.log(`  Amount: 1 ETH`);
-            console.log(`📤 From: ${transferIntent.fromAddress}`);
-            console.log(`📥 To: ${transferIntent.toAddress}`);
+            console.log('Real transfer intent created successfully in database');
+            console.log(`Intent ID: ${transferIntent.id}`);
+            console.log(`Status: ${transferIntent.status}`);
+            console.log(`Amount: 1 ETH`);
+            console.log(`From: ${transferIntent.fromAddress}`);
+            console.log(`To: ${transferIntent.toAddress}`);
 
         } catch (error) {
             console.error('  Transfer intent creation failed:', error);
@@ -318,7 +318,7 @@ describe('Real E2E: Mainnet ETH Price Monitoring & Transfer Execution - PHASE 2'
             console.log(`  Current ETH price: $${currentPrice.toFixed(2)}`);
 
             // Step 2: Evaluate triggers
-            console.log('\n🔍 Step 2: Evaluating price triggers...');
+            console.log('\nStep 2: Evaluating price triggers...');
             const hotToColdThreshold = MAINNET_CONFIG.ETH.THRESHOLDS.HOT_TO_COLD;
             const coldToHotThreshold = MAINNET_CONFIG.ETH.THRESHOLDS.COLD_TO_HOT;
 
@@ -366,17 +366,17 @@ describe('Real E2E: Mainnet ETH Price Monitoring & Transfer Execution - PHASE 2'
                 expect(transferIntent).toBeDefined();
                 expect(transferIntent.status).toBe('PLANNED');
                 console.log(`  Transfer intent created: ID ${transferIntent.id}`);
-                console.log(`📤 From: ${transferIntent.fromAddress}`);
-                console.log(`📥 To: ${transferIntent.toAddress}`);
-                console.log(`  Amount: 1 ETH`);
-                console.log(`🔄 Status: ${transferIntent.status}`);
+                console.log(`From: ${transferIntent.fromAddress}`);
+                console.log(`To: ${transferIntent.toAddress}`);
+                console.log(`Amount: 1 ETH`);
+                console.log(`Status: ${transferIntent.status}`);
 
                 // Step 4: Simulate execution flow
                 console.log('\n  Step 4: Simulating execution flow...');
 
                 // Simulate status transitions
                 const statusFlow = ['PLANNED', 'PROPOSED', 'SUBMITTED', 'MINED_SUCCESS'];
-                console.log('🔄 Status transition flow:');
+                console.log('Status transition flow:');
 
                 for (let i = 0; i < statusFlow.length; i++) {
                     const status = statusFlow[i];
@@ -434,7 +434,7 @@ describe('Real E2E: Mainnet ETH Price Monitoring & Transfer Execution - PHASE 2'
 
         try {
             // 1. Service Health Check
-            console.log('🔍 1. Service Health Assessment...');
+            console.log('1. Service Health Assessment...');
             const priceOracleHealth = await axios.get('http://localhost:3000/health');
             expect(priceOracleHealth.status).toBe(200);
             console.log('     Price Oracle: Healthy');

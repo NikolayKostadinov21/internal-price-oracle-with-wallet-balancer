@@ -322,15 +322,15 @@ yarn dev
 
 ```
 src/
-├── index.ts              # Service entry point
-├── config/               # Configuration management
-├── core/                 # Core business logic
+├── index.ts                        # Service entry point
+├── config/                         # Configuration management
+├── core/                           # Core business logic
 │   ├── EOAExecutionEngine.ts
 │   ├── TriggerEvaluator.ts
 │   └── WalletBalancerService.ts
-├── models/               # Database models
-├── repositories/         # Data access layer
-└── types.ts             # TypeScript type definitions
+├── models/                         # Database models
+├── repositories/                   # Data access layer
+└── types.ts                        # TypeScript type definitions
 ```
 
 ## Dependencies

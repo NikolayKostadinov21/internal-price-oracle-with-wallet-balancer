@@ -19,10 +19,7 @@ export interface TransferIntentAttributes {
 
 export interface TransferIntentCreationAttributes extends Optional<TransferIntentAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
 
-export class TransferIntentModel extends Model<TransferIntentAttributes, TransferIntentCreationAttributes> {
-    // Remove public class fields to avoid shadowing Sequelize getters
-    // These will be provided by Sequelize automatically
-}
+export class TransferIntentModel extends Model<TransferIntentAttributes, TransferIntentCreationAttributes> { }
 
 export const initTransferIntentModel = (sequelize: any) => {
     TransferIntentModel.init(
@@ -87,7 +84,7 @@ export const initTransferIntentModel = (sequelize: any) => {
             sequelize,
             tableName: 'transfer_intents',
             timestamps: true,
-            underscored: true, // Use snake_case for database columns
+            underscored: true,
             indexes: [
                 {
                     unique: true,
