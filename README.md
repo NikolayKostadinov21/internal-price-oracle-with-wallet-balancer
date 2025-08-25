@@ -125,10 +125,6 @@ Move Amount = Wallet Balance × (Move Amount Percentage / 100)
 
 ## E2E Testing
 
-**IMPORTANT: This section is now expanded above in the "COMPREHENSIVE TESTING GUIDE"**
-
-The E2E testing section has been moved to the top of this README for better visibility. Please refer to the comprehensive testing guide above for complete testing instructions.
-
 ### **Quick Reference**
 
 ```bash
